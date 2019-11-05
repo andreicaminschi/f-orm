@@ -1,9 +1,9 @@
 import './extensions/string';
 import './extensions/array';
 import './extensions/object';
-import './types'
-import './symbols'
 
+export * from './types'
+export * from './symbols'
 export {default as Model} from "./db/Model"
 export {default as Repository} from "./db/Repository"
 export {default as IDatabaseRecord} from "./db/IDatabaseRecord"
