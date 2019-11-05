@@ -1,6 +1,6 @@
 import {Dictionary} from "../types";
 
-export interface IApiResponse {
+export default interface IApiResponse {
     IsSuccessful(): boolean;
 
     HasData(key: string): boolean;
@@ -9,5 +9,5 @@ export interface IApiResponse {
 
     GetError(): string;
 
-    GetValidationErrors():Dictionary<any>;
+    GetValidationErrors(): Dictionary<any>;
 }
