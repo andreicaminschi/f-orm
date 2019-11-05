@@ -1,4 +1,4 @@
-import {IApiDriver} from "./api/IApiDriver";
+import IApiDriver from "./api/IApiDriver";
 
 export default class Eloquent {
     private static $default_api_driver: IApiDriver;

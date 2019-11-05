@@ -3,8 +3,8 @@ import Model from "./Model";
 import {RECORD_INFO} from "../symbols";
 import IDatabaseRecord from "./IDatabaseRecord";
 import Eloquent from "../config";
-import {IApiDriver} from "../api/IApiDriver";
 import {Dictionary} from "../types";
+import IApiDriver from "../api/IApiDriver";
 
 @EloquentClass
 export default class Repository<T extends Model> {

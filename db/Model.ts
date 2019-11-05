@@ -4,7 +4,7 @@ import IDatabaseRecord from "./IDatabaseRecord";
 import Repository from "./Repository";
 import Eloquent from "../config";
 import {Dictionary} from "../types";
-import {IApiDriver} from "../api/IApiDriver";
+import IApiDriver from "../api/IApiDriver";
 
 @EloquentClass
 export default class Model {
