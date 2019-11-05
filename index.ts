@@ -2,8 +2,8 @@ import './extensions/string';
 import './extensions/array';
 import './extensions/object';
 
-export * from './types'
-export * from './symbols'
+export {RELATIONS, RECORD_INFO} from "./symbols";
+export {Dictionary} from "./types";
 export {default as Model} from "./db/Model"
 export {default as Repository} from "./db/Repository"
 export {default as IDatabaseRecord} from "./db/IDatabaseRecord"
