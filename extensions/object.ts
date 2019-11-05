@@ -60,7 +60,7 @@ interface ObjectConstructor {
      * Creates a new object from data, converting keys from snake_case to camelCase
      * @param data
      */
-    createFromData(data: Dictionary<any>): Dictionary<any>;
+    createFromData(data: {[key:string]:any}): {[key:string]:any};
 }
 
 Object.isObject = function (o: any) { return typeof o === "object" && null !== o;};
@@ -78,8 +78,8 @@ Object.isBelongsToRelation = function (o: any) { return Object.isObject(o) && Ob
 Object.isMorphManyRelation = function (o: any) { return Object.isObject(o) && Object.keys(o).indexOf('$is_morph_many_relation') !== -1;};
 Object.isHasManyRelation = function (o: any) { return Object.isObject(o) && Object.keys(o).indexOf('$is_has_many_relation') !== -1;};
 
-Object.createFromData = function (data: Dictionary<any>) {
-    let result: Dictionary<any> = {};
+Object.createFromData = function (data: {[key:string]:any}) {
+    let result: {[key:string]:any} = {};
     Object.keys(data).forEach(key => result[key.snakeCaseToCamelCase()] = data[key]);
     return result;
 };

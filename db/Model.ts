@@ -2,8 +2,9 @@ import {EloquentClass} from "../decorators";
 import {RECORD_INFO, RELATIONS} from "../symbols";
 import IDatabaseRecord from "./IDatabaseRecord";
 import Repository from "./Repository";
-import {IApiDriver} from "../api/IApiDriver";
 import Eloquent from "../config";
+import {Dictionary} from "../types";
+import {IApiDriver} from "../api/IApiDriver";
 
 @EloquentClass
 export default class Model {

@@ -1,4 +1,5 @@
 import {IApiResponse} from "./IApiResponse";
+import {Dictionary} from "../types";
 
 export interface IApiDriver {
     SetToken(token: string): this;
