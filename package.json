@@ -1,0 +1,21 @@
+{
+  "name": "f-orm",
+  "version": "1.0.0",
+  "description": "My webpack project",
+  "main": "index.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack",
+    "start": "webpack-dev-server"
+  },
+  "author": "Andrei Caminschi",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.19.0",
+    "core-js": "^3.3.6",
+    "regenerator-runtime": "^0.13.3"
+  },
+  "devDependencies": {
+    "typescript": "^3.6.4"
+  }
+}
