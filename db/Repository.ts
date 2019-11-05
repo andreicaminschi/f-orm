@@ -240,13 +240,6 @@ export default class Repository<T extends Model> {
         return r;
     }
 
-    public async GetWithoutLoading(append?: string, extra?: Dictionary<any>) {
-        this._is_loading = true;
-        let r = await this.Connection.Get(this.GetUrl(append), {...this.GetFilters(), ...extra});
-        this._is_loading = false;
-        return r;
-    }
-
     /**
      * Sets the persistent attributes and saves the model
      * @param model
