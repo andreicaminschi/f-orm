@@ -4,7 +4,10 @@
   "description": "My webpack project",
   "main": "index.ts",
   "scripts": {
-
+    "build": "tsc && cp dist/index.d.ts index.d.ts && rm dist -R"
+  },
+  "bin": {
+    "f-orm": "bin/cli.js"
   },
   "author": "Andrei Caminschi",
   "license": "ISC",
