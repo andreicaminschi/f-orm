@@ -4,11 +4,9 @@
   "description": "My webpack project",
   "main": "index.ts",
   "scripts": {
-    "build": "tsc && cp dist/index.d.ts index.d.ts && rm dist -R"
+    "build": "tsc && cp dist/index.d.ts index.d.ts && rm dist -R",
   },
-  "bin": {
-    "f-orm": "bin/cli.js"
-  },
+  "repository": "https://github.com/andreicaminschi/f-orm",
   "author": "Andrei Caminschi",
   "license": "ISC",
   "dependencies": {
