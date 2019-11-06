@@ -5,7 +5,7 @@
 The library comes with a preloaded api wrapper around axios that allows calls to the API
 After loading the library call the following lines
 ```typescript
-import {fOrm} from 'f-orm';
+import {fOrm} from '@andrei.caminschi/f-orm';
 fOrm.SetApiBaseUrl('http://api.your-domain.com').SetApiVersion('1.0');
 ```
 Authentication is done via tokens.
@@ -43,7 +43,7 @@ All the endpoints ( except delete) should return the following response format (
 ```
 Model declaration example
 ```typescript
-import {Dictionary, HasMany, HasOne, IDatabaseRecord, Model, RECORD_INFO, RELATIONS, Repository} from "f-orm";
+import {Dictionary, HasMany, HasOne, IDatabaseRecord, Model, RECORD_INFO, RELATIONS, Repository} from '@andrei.caminschi/f-orm';
    // general information about the model
    let UserRecord: IDatabaseRecord<UserModel> = {
        Name: 'user', // name of a single instance ( row )
