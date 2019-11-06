@@ -277,4 +277,15 @@ export default class Repository<T extends Model> {
         if (index >= 0) this.Items.splice(index, 1)
     }
     //endregion
+
+    /**
+     * Adds the item to the repository and saves it
+     * @param model
+     * @constructor
+     */
+    public async Save(model: T) {
+        this.AddItem(model);
+        let url = model.GetCreateEndpointUrl();
+        return await model.Save();
+    }
 }
