@@ -1,6 +1,6 @@
 import IApiDriver from "./api/IApiDriver";
 
-export default class Eloquent {
+export default class fOrm {
     private static $default_api_driver: IApiDriver;
     static SetDefaultApiDriver(driver: IApiDriver) { this.$default_api_driver = driver; }
     static GetDefaultApiDriver() {
