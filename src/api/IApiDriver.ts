@@ -2,6 +2,10 @@ import {Dictionary} from "../types";
 import IApiResponse from "./IApiResponse";
 
 export default interface IApiDriver {
+    SetBaseEndpoint(uri: string): this;
+
+    SetVersion(version: string): this
+
     SetToken(token: string): this;
 
     RemoveToken(): this;
