@@ -1,5 +1,5 @@
 import Model from "./Model";
-import {Dictionary} from "../types";
+import {Dictionary} from "../../types";
 
 export default interface IDatabaseRecord<T extends Model> {
     readonly Name: string;

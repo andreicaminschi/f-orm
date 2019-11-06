@@ -1,4 +1,4 @@
-import {Dictionary} from "../types";
+import {Dictionary} from "../../types";
 import IApiResponse from "./IApiResponse";
 
 export default interface IApiDriver {
