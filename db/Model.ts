@@ -290,7 +290,7 @@ export default class Model {
         this.$patch_endpoint_url_format = format;
         return this;
     }
-    public GetCreateEndpointUrl(...args: (string | number)[]) {return this.$create_endpoint_url_format.replaceWithObjectProperties(this.ToJson())}
+    public GetCreateEndpointUrl(...args: (string | number)[]) { return this.$create_endpoint_url_format.replaceWithObjectProperties(this.ToJson()) }
     public GetPatchEndpointUrl(...args: (string | number)[]) {return this.$patch_endpoint_url_format.replaceWithObjectProperties(this.ToJson())}
 
 
@@ -317,8 +317,12 @@ export default class Model {
      * @constructor
      */
     async Save(extra?: (Model | Dictionary<any>)) {
+        // if the passed parameter is a Model instance synchronize the two instances
         if (Object.isModel(extra)) {
             this.Load((<Model>extra).ToJson());
+            (<Model>extra).Load(this.ToJson());
+            (<Model>extra).SetCreateEndpointUrlFormat(this.$create_endpoint_url_format);
+            (<Model>extra).SetPatchEndpointUrlFormat(this.$patch_endpoint_url_format);
         }
 
         this._is_loading = true;
