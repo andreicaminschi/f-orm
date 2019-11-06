@@ -1,4 +1,4 @@
-import IApiDriver from "./src/api/IApiDriver";
+import IApiDriver from "./api/IApiDriver";
 
 export default class fOrm {
     private static $default_api_driver: IApiDriver;

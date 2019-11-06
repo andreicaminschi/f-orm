@@ -1,9 +1,9 @@
-import {EloquentClass} from "../../decorators";
-import {RECORD_INFO, RELATIONS} from "../../symbols";
+import {EloquentClass} from "../decorators";
+import {RECORD_INFO, RELATIONS} from "../symbols";
 import IDatabaseRecord from "./IDatabaseRecord";
 import Repository from "./Repository";
-import Eloquent from "../../config";
-import {Dictionary} from "../../types";
+import Eloquent from "../config";
+import {Dictionary} from "../types";
 import IApiDriver from "../api/IApiDriver";
 
 @EloquentClass

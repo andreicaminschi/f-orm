@@ -1,5 +1,5 @@
-import Model from "./src/db/Model";
-import Repository from "./src/db/Repository";
+import Model from "./db/Model";
+import Repository from "./db/Repository";
 import {RelationOptions} from "./types";
 
 /**
