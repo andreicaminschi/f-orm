@@ -3,9 +3,7 @@
   "version": "1.0.0",
   "description": "My webpack project",
   "main": "index.ts",
-  "scripts": {
-    "build": "tsc && cp dist/index.d.ts src/index.d.ts && rm dist -R"
-  },
+  "scripts": {},
   "repository": "https://github.com/andreicaminschi/f-orm",
   "author": "Andrei Caminschi",
   "license": "ISC",
