@@ -312,14 +312,20 @@ export default class Model {
 
     /**
      * Saves the model
+     * If the parameter passed is a model the values from that model will be loaded first
+     * @param extra Extra data to be passed, or a model instance
      * @constructor
      */
-    async Save(extra?: Dictionary<any>) {
+    async Save(extra?: (Model | Dictionary<any>)) {
+        if (Object.isModel(extra)) {
+            this.Load((<Model>extra).ToJson());
+        }
+
         this._is_loading = true;
         let url = this.IsNew ? this.GetCreateEndpointUrl() : this.GetPatchEndpointUrl();
         let r = this.IsNew
-            ? await this.Connection.Post(url, {...this.GetChangedAttributes(), ...extra})
-            : await this.Connection.Patch(url, {...this.GetChangedAttributes(), ...extra});
+            ? await this.Connection.Post(url, {...this.GetChangedAttributes(), ...(Object.isModel(extra) ? extra : [])})
+            : await this.Connection.Patch(url, {...this.GetChangedAttributes(), ...(Object.isModel(extra) ? extra : [])});
 
         if (r.IsSuccessful()) {
             this.Load(r.GetData(this.$name));
