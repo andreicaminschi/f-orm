@@ -160,7 +160,7 @@ export default class Repository<T extends Model> {
     }
     //endregion
 
-    //region Methods
+    //region Item related methods
 
     /**
      * Adds a new item
@@ -168,8 +168,7 @@ export default class Repository<T extends Model> {
      * @constructor
      */
     public AddItem(item: T) {
-        this.SetModelPersistentAttributes(item);
-        this.Items.push(item);
+        this.Items.push(this.ConfigureItem(item));
         return this;
     }
 
@@ -185,7 +184,10 @@ export default class Repository<T extends Model> {
 
     public Load(data: Dictionary<any>[]) {
         let items = [];
-        for (let row of data) items.push(this.RecordInfo.Make(row));
+        for (let row of data) {
+            let item = this.RecordInfo.Make(row);
+            items.push(this.ConfigureItem(item));
+        }
         this.Items = items;
 
         return this;
@@ -218,18 +220,37 @@ export default class Repository<T extends Model> {
         });
         return this;
     }
+
+    /**
+     * Configures an item
+     * @param item
+     * @constructor
+     */
+    private ConfigureItem(item: T) {
+        this.SetModelPersistentAttributes(item);
+        return item;
+    }
     //endregion
 
     //region Methods
 
+    /**
+     * Gets the url on which from which the data should be retrieved
+     * Is overwritten by relation decorators
+     * @param args
+     * @constructor
+     */
     public GetUrl(...args: (string | number | undefined)[]) {
         let parts = [this.$namespace, this.$table, ...args];
-        return parts.filter((a) => {
-            if (typeof a === "number") return true;
-            return !!a;
-        }).join('/')
+        return parts.removeFalsyValues({except_types: ['number']}).join('/')
     }
 
+    /**
+     * Retrieves data from the API and loads it as models
+     * @param append
+     * @param extra
+     * @constructor
+     */
     public async Get(append?: string, extra?: Dictionary<any>) {
         this._is_loading = true;
         let r = await this.Connection.Get(this.GetUrl(append), {...this.GetFilters(), ...extra});
@@ -238,16 +259,6 @@ export default class Repository<T extends Model> {
         this.ResetFilters();
         this._is_loading = false;
         return r;
-    }
-
-    /**
-     * Sets the persistent attributes and saves the model
-     * @param model
-     * @constructor
-     */
-    public async Save(model: T) {
-        this.SetModelPersistentAttributes(model);
-        return await model.Save();
     }
 
     //endregion
@@ -266,33 +277,4 @@ export default class Repository<T extends Model> {
         if (index >= 0) this.Items.splice(index, 1)
     }
     //endregion
-
-    //region Bulk methods
-    /**
-     * Bulk patch for all the changed models in the repository
-     * Doesn't include new models
-     * @constructor
-     */
-    public async Update() {
-        let data: Dictionary<any> = {};
-
-        this.Items.forEach((item: T) => {
-            if (item.HasChanged()) data[item.GetAttribute(this.RecordInfo.PrimaryKey)] = item.GetChangedAttributes();
-        });
-
-        let r = await this.Connection.Patch(this.GetUrl(), data);
-        if (!r.IsSuccessful()) {
-            this.Items.forEach((item: T) => item.RestoreOriginalAttributes());
-            return r;
-        }
-        let items: Dictionary<any>[] = r.GetData(this.$table);
-        items.forEach((item: Dictionary<any>) => {
-            let index = this.FindIndexBy(this.RecordInfo.PrimaryKey, item[this.RecordInfo.PrimaryKey.camelCaseToSnakeCase()]);
-            if (index < 0) return;
-            this.Items[index].Load(item);
-        });
-        return r;
-    }
-    //endregion
-
 }

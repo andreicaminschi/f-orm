@@ -36,12 +36,6 @@ interface String {
     capitalize(s: string): string;
 
     /**
-     * Highlights text
-     * @param search
-     */
-    highlight(search: string): string;
-
-    /**
      * Replaces {Property} with the value of Object.Property
      * @param o
      */
@@ -77,15 +71,11 @@ String.prototype.capitalize = function (this: string, s: string) {
     return this.replace(this.charAt(0), this.charAt(0).toUpperCase());
 };
 
-String.prototype.highlight = function (this: string, search: string) {
-    let position = this.toLowerCase().indexOf(search.toLowerCase());
-    if (position === -1) return this;
-    return this.substr(0, position) + '<strong>' + this.substr(position, search.length) + '</strong>' + this.substr(position + search.length);
-
-}
-
 String.prototype.replaceWithObjectProperties = function (this: string, object: any) {
     let url = this;
-    Object.keys(object).forEach(key => {url = url.replace(`{${key}}`, object[key])});
+    Object.keys(object).forEach(key => {
+        url = url.replace(`{${key}}`, object[key]);
+        url = url.replace(`{${key.snakeCaseToCamelCase()}}`, object[key]);
+    });
     return url;
 }

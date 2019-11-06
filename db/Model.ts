@@ -118,8 +118,16 @@ export default class Model {
      * @param key
      * @constructor
      */
-    GetAttribute(key: string) {return this[key]}
+    GetAttribute(key: string) {
+        if (typeof this[key] === "undefined") throw `${this.$name}.${key} is undefined`;
+        return this[key]
+    }
 
+    /**
+     * Gets the primary key value
+     * @constructor
+     */
+    GetPrimaryKeyValue() {return this.GetAttribute(this.$primary_key);}
     /**
      * Sets the value of an attribute
      * @param key
@@ -131,6 +139,22 @@ export default class Model {
         return this;
     }
 
+    ToJson() {
+        let result: Dictionary<any> = {};
+        Object.keys(this.$original_attributes).forEach((key: string) => { result[key.camelCaseToSnakeCase()] = this.GetAttribute(key); })
+        // getting the data from has-many and has-many-though _relations
+        // extract the ids and send them
+        Object.keys(this.RecordInfo.Relations).forEach((key: string) => {
+            if (['has-many', 'has-many-though'].indexOf(this.RecordInfo.Relations[key]) >= 0) {
+                let value = this.GetRelationValue(key);
+                if (!value) return;
+                let data: any[] = (<Repository<Model>>value).Items.map((item: Model) => item.ToJson());
+                if (data.length) result[key.camelCaseToSnakeCase()] = data;
+            }
+        });
+
+        return result;
+    }
     /**
      * Loads the attributes from the given dictionary
      * The keys of the dictionary are transformed from snake_case to CamelCase
@@ -231,29 +255,58 @@ export default class Model {
     get ValidationErrors() { return this._errors;}
     //endregion
 
-    //region Methods
-    public GetUrl(...args: (string | number)[]) {
-        let parts = [this.$namespace, this.$name, ...args];
-        return parts.filter((a) => {
-            if (typeof a === "number") return true;
-            return !!a;
-        }).join('/')
+    //region URL formats
+    /**
+     * The template for the create URL
+     * Values enclosed in curly brackets are replace with the the objects property value
+     * Defaults to namespace/name ( eg: /admin/user, or /user )
+     */
+    private $create_endpoint_url_format: string = [this.$namespace, this.$name].removeFalsyValues({except_types: ['number']}).join('/');
+    /**
+     * Sets the format for the create URL
+     * Values enclosed in curly brackets are replace with the the objects property value
+     * @param format
+     * @constructor
+     */
+    protected SetCreateEndpointUrlFormat(format: string) {
+        this.$create_endpoint_url_format = format;
+        return this;
     }
+
+    /**
+     * The template for the patch URL
+     * Values enclosed in curly brackets are replace with the the objects property value
+     * Defaults to namespace/name/{Id} ( eg: /admin/user/10, or /user/10 )
+     */
+    private $patch_endpoint_url_format: string = [this.$namespace, this.$name, '{Id}'].removeFalsyValues({except_types: ['number']}).join('/');
+
+    /**
+     * Sets the format for the patch URL
+     * Values enclosed in curly brackets are replace with the the objects property value
+     * @param format
+     * @constructor
+     */
+    protected SetPatchEndpointUrlFormat(format: string) {
+        this.$patch_endpoint_url_format = format;
+        return this;
+    }
+    public GetCreateEndpointUrl(...args: (string | number)[]) {return this.$create_endpoint_url_format.replaceWithObjectProperties(this.ToJson())}
+    public GetPatchEndpointUrl(...args: (string | number)[]) {return this.$patch_endpoint_url_format.replaceWithObjectProperties(this.ToJson())}
+
+
+    //endregion
+
+    //region Methods
     /**
      * Gets or refreshes the information of the model
      * @constructor
      */
     async Get(extra?: Dictionary<any>) {
         this._is_loading = true;
-        let url = this.GetUrl(this.GetAttribute(this.$primary_key));
-        let r = await this.Connection.Get(url, extra);
+        let r = await this.Connection.Get(this.GetPatchEndpointUrl(), extra);
         this._is_loading = false;
         this.Load(r.GetData(this.$name));
     }
-
-    private get CreateEndpoint() {return this.GetUrl()}
-    private get PatchEndpoint() {return this.GetUrl(this.GetAttribute(this.$primary_key))}
-
     private _is_loading: boolean = false;
     get IsLoading() {return this._is_loading}
 
@@ -263,11 +316,10 @@ export default class Model {
      */
     async Save(extra?: Dictionary<any>) {
         this._is_loading = true;
-        let url = this.IsNew ? this.CreateEndpoint : this.PatchEndpoint;
-        let attributes = {...this.GetChangedAttributes(), ...extra};
+        let url = this.IsNew ? this.GetCreateEndpointUrl() : this.GetPatchEndpointUrl();
         let r = this.IsNew
-            ? await this.Connection.Post(url, attributes)
-            : await this.Connection.Patch(url, attributes);
+            ? await this.Connection.Post(url, {...this.GetChangedAttributes(), ...extra})
+            : await this.Connection.Patch(url, {...this.GetChangedAttributes(), ...extra});
 
         if (r.IsSuccessful()) {
             this.Load(r.GetData(this.$name));
