@@ -1,4 +1,4 @@
-import axios from 'axios';
+const axios = require('axios');
 import IApiResponse from "./IApiResponse";
 import {Dictionary} from "../types";
 import IApiDriver from "./IApiDriver";

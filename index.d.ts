@@ -9,4 +9,5 @@ export { default as Repository } from "./src/db/Repository";
 export { default as IDatabaseRecord } from "./src/db/IDatabaseRecord";
 export { default as IApiDriver } from "./src/api/IApiDriver";
 export { default as IApiResponse } from "./src/api/IApiResponse";
+export { ApiDriver, ApiResponse } from "./src/api/api";
 export { default as fOrm } from './src/config';
