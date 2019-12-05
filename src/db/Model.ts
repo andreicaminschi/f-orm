@@ -325,11 +325,17 @@ export default class Model {
             (<Model>extra).SetPatchEndpointUrlFormat(this.$patch_endpoint_url_format);
         }
 
+        // Building the parameters list
+        let data = new FormData();
+        let changed_attributes = this.GetChangedAttributes();
+        Object.keys(changed_attributes).forEach((key: string) => data.append(key, changed_attributes[key]));
+        Object.keys(<Dictionary<any>>extra).forEach((key: string) => data.append(key, (<Dictionary<any>>extra)[key]));
+
         this._is_loading = true;
         let url = this.IsNew ? this.GetCreateEndpointUrl() : this.GetPatchEndpointUrl();
         let r = this.IsNew
-            ? await this.Connection.Post(url, {...this.GetChangedAttributes(), ...(Object.isModel(extra) ? extra : [])})
-            : await this.Connection.Patch(url, {...this.GetChangedAttributes(), ...(Object.isModel(extra) ? extra : [])});
+            ? await this.Connection.Post(url, data)
+            : await this.Connection.Patch(url, data);
 
         if (r.IsSuccessful()) {
             this.Load(r.GetData(this.$name));
