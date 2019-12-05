@@ -89,22 +89,28 @@ export class ApiDriver implements IApiDriver {
     }
 
     public Get(endpoint: string, data?: Dictionary<any>) {
-        let p = axios.get(this.GetEndpointUrl(endpoint), {params: data, headers: this.GetHeaders()});
+        let p = axios.get(this.GetEndpointUrl(endpoint), {params: this.ConvertObjectToFormData(data || {}), headers: this.GetHeaders()});
         return this.HandlePromise(p);
     }
 
     public async Post(endpoint: string, data?: Dictionary<any>) {
-        let p = axios.post(this.GetEndpointUrl(endpoint), data, {headers: this.GetHeaders()})
+        let p = axios.post(this.GetEndpointUrl(endpoint), this.ConvertObjectToFormData(data || {}), {headers: this.GetHeaders()})
         return await this.HandlePromise(p);
     }
 
     public async Patch(endpoint: string, data?: Dictionary<any>) {
-        let p = axios.patch(this.GetEndpointUrl(endpoint), data, {headers: this.GetHeaders()})
+        let p = axios.patch(this.GetEndpointUrl(endpoint), this.ConvertObjectToFormData(data || {}), {headers: this.GetHeaders()})
         return await this.HandlePromise(p);
     }
 
     public async Delete(endpoint: string, data?: Dictionary<any>) {
-        let p = axios.delete(this.GetEndpointUrl(endpoint), data, {headers: this.GetHeaders()})
+        let p = axios.delete(this.GetEndpointUrl(endpoint), this.ConvertObjectToFormData(data || {}), {headers: this.GetHeaders()})
         return await this.HandlePromise(p);
+    }
+
+    private ConvertObjectToFormData(object:Dictionary<any>){
+        const formData = new FormData();
+        Object.keys(object).forEach(key => formData.append(key, object[key]));
+        return formData;
     }
 }
