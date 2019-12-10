@@ -99,7 +99,7 @@ export default class Model {
         Object.keys(this).forEach((key: string) => {
             if (key.indexOf('_') === 0) return;
             this.SetOriginalAttribute(key, this.GetAttribute(key))
-        })
+        });
         return this;
     }
 
@@ -135,6 +135,7 @@ export default class Model {
      * @constructor
      */
     SetAttribute(key: string, value: any) {
+        if (key === this.$primary_key || key === this.$primary_key.snakeCaseToCamelCase()) this._is_new = false;
         this[key] = value;
         return this;
     }
@@ -163,7 +164,6 @@ export default class Model {
      * @constructor
      */
     Load(data: Dictionary<any> | number) {
-        this._is_new = false;
         if (typeof data === "number" || typeof data === 'string') {
             this.SetAttribute(this.$primary_key, data);
             return this;
