@@ -314,11 +314,12 @@ export default class Model {
      * Saves the model
      * If the parameter passed is a model the values from that model will be loaded first
      * @param extra Extra data to be passed, or a model instance
+     * @param config Extra axios config
      * @constructor
      */
-    async Save(extra?: (Model | Dictionary<any>)) {
+    async Save(extra?: (Model | Dictionary<any>), config?: Dictionary<any>) {
         // if the passed parameter is a Model instance synchronize the two instances
-        if (Object.isModel(extra)) {
+        if (typeof extra !== "undefined" && Object.isModel(extra)) {
             this.Load((<Model>extra).ToJson());
             (<Model>extra).Load(this.ToJson());
             (<Model>extra).SetCreateEndpointUrlFormat(this.$create_endpoint_url_format);
@@ -329,13 +330,13 @@ export default class Model {
         let data = new FormData();
         let changed_attributes = this.GetChangedAttributes();
         Object.keys(changed_attributes).forEach((key: string) => data.append(key, changed_attributes[key]));
-        Object.keys(<Dictionary<any>>extra).forEach((key: string) => data.append(key, (<Dictionary<any>>extra)[key]));
+        if (typeof extra !== "undefined") Object.keys(<Dictionary<any>>extra).forEach((key: string) => data.append(key, (<Dictionary<any>>extra)[key]));
 
         this._is_loading = true;
         let url = this.IsNew ? this.GetCreateEndpointUrl() : this.GetPatchEndpointUrl();
         let r = this.IsNew
-            ? await this.Connection.Post(url, data)
-            : await this.Connection.Patch(url, data);
+            ? await this.Connection.Post(url, data, config)
+            : await this.Connection.Patch(url, data, config);
 
         if (r.IsSuccessful()) {
             this.Load(r.GetData(this.$name));

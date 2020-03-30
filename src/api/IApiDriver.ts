@@ -10,13 +10,13 @@ export default interface IApiDriver {
 
     RemoveToken(): this;
 
-    Get(endpoint: string, data?: Dictionary<any>): Promise<IApiResponse>;
+    Get(endpoint: string, data?: Dictionary<any>, config?: Dictionary<any>): Promise<IApiResponse>;
 
-    Post(endpoint: string, data?: Dictionary<any>): Promise<IApiResponse>;
+    Post(endpoint: string, data?: Dictionary<any>, config?: Dictionary<any>): Promise<IApiResponse>;
 
-    Patch(endpoint: string, data?: Dictionary<any>): Promise<IApiResponse>;
+    Patch(endpoint: string, data?: Dictionary<any>, config?: Dictionary<any>): Promise<IApiResponse>;
 
-    Delete(endpoint: string, data?: Dictionary<any>): Promise<IApiResponse>;
+    Delete(endpoint: string, data?: Dictionary<any>, config?: Dictionary<any>): Promise<IApiResponse>;
 
     SetOnErrorHandler(handler: (r: IApiResponse) => void): this;
 }

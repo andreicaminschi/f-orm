@@ -1,7 +1,8 @@
-const axios = require('axios');
 import IApiResponse from "./IApiResponse";
 import {Dictionary} from "../types";
 import IApiDriver from "./IApiDriver";
+
+const axios = require('axios');
 
 export class ApiResponse implements IApiResponse {
     private readonly success: boolean;
@@ -88,23 +89,49 @@ export class ApiDriver implements IApiDriver {
 
     }
 
-    public Get(endpoint: string, data?: FormData | Dictionary<any>) {
-        let p = axios.get(this.GetEndpointUrl(endpoint), {params: data instanceof FormData ? data : this.ConvertObjectToFormData(data || {}), headers: this.GetHeaders()});
+    public Get(endpoint: string, data?: FormData | Dictionary<any>, config?: Dictionary<any>) {
+        let c: Dictionary<any> = {
+            ...(config || {}),
+            ...{
+                params: data instanceof FormData ? data : this.ConvertObjectToFormData(data || {}),
+                headers: this.GetHeaders()
+            }
+        };
+        let p = axios.get(this.GetEndpointUrl(endpoint), c);
         return this.HandlePromise(p);
     }
 
-    public async Post(endpoint: string, data?: FormData | Dictionary<any>) {
-        let p = axios.post(this.GetEndpointUrl(endpoint),  data instanceof FormData ? data : this.ConvertObjectToFormData(data || {}), {headers: this.GetHeaders()})
+    public async Post(endpoint: string, data?: FormData | Dictionary<any>, config?: Dictionary<any>) {
+        let c: Dictionary<any> = {
+            ...(config || {}),
+            ...{
+                headers: this.GetHeaders()
+            }
+        };
+        let p = axios.post(this.GetEndpointUrl(endpoint), data instanceof FormData ? data : this.ConvertObjectToFormData(data || {}),c);
         return await this.HandlePromise(p);
     }
 
-    public async Patch(endpoint: string, data?: FormData | Dictionary<any>) {
-        let p = axios.patch(this.GetEndpointUrl(endpoint),  data instanceof FormData ? data : this.ConvertObjectToFormData(data || {}), {headers: this.GetHeaders()})
+    public async Patch(endpoint: string, data?: FormData | Dictionary<any>, config?: Dictionary<any>) {
+        let c: Dictionary<any> = {
+            ...(config || {}),
+            ...{
+                headers: this.GetHeaders()
+            }
+        };
+        let p = axios.patch(this.GetEndpointUrl(endpoint), data instanceof FormData ? data : this.ConvertObjectToFormData(data || {}),c);
         return await this.HandlePromise(p);
     }
 
-    public async Delete(endpoint: string, data?: FormData | Dictionary<any>) {
-        let p = axios.delete(this.GetEndpointUrl(endpoint), data instanceof FormData ? data : this.ConvertObjectToFormData(data || {}), {headers: this.GetHeaders()})
+    public async Delete(endpoint: string, data?: FormData | Dictionary<any>, config?: Dictionary<any>) {
+        let c: Dictionary<any> = {
+            ...(config || {}),
+            ...{
+                params: data instanceof FormData ? data : this.ConvertObjectToFormData(data || {}),
+                headers: this.GetHeaders()
+            }
+        };
+        let p = axios.delete(this.GetEndpointUrl(endpoint), c);
         return await this.HandlePromise(p);
     }
 
