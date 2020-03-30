@@ -1,6 +1,6 @@
 {
   "name": "@andrei.caminschi/f-orm",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "My webpack project",
   "main": "index.ts",
   "scripts": {},

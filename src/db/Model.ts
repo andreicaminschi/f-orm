@@ -350,7 +350,7 @@ export default class Model {
 
     async Delete(extra?: Dictionary<any>) {
         this._is_loading = true;
-        let r = await this.Connection.Delete(this.PatchEndpoint, extra)
+        let r = await this.Connection.Delete(this.GetPatchEndpointUrl(), extra)
         this._is_loading = false
         return r;
     }
