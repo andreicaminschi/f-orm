@@ -93,7 +93,7 @@ export class ApiDriver implements IApiDriver {
         let c: Dictionary<any> = {
             ...(config || {}),
             ...{
-                params: data instanceof FormData ? data : this.ConvertObjectToFormData(data || {}),
+                params: data,
                 headers: this.GetHeaders()
             }
         };
